@@ -1,0 +1,41 @@
+pip install tensorflow
+pip install pip
+pip install --upgrade keras
+import pandas as pd
+df = pd.read_csv(r'C:\Users\yashaswini\Desktop\File.csv')
+x=df.iloc[:,3:13].values
+y=df.iloc[:,13].values
+x
+y
+from sklearn.preprocessing import LabelEncoder,OneHotEncoder
+labelencoder_x_1=LabelEncoder()
+x[:,1]=labelencoder_x_1.fit_transform(x[:,1])
+labelencoder_x_2=LabelEncoder()
+x[:,2]=labelencoder_x_2.fit_transform(x[:,2])
+onehotencoder=OneHotEncoder(categories ='auto')
+X=onehotencoder.fit_transform(x).toarray()
+X=x[:,1:]
+X
+import sklearn
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, random_state = 0)
+from sklearn.preprocessing import StandardScaler
+sc = StandardScaler()
+X_train = sc.fit_transform(X_train)
+X_test = sc.transform(X_test)
+X
+import keras
+from keras.models import Sequential
+from keras.layers import Dense
+classifier=Sequential()
+classifier.add(Dense(units=6,kernel_initializer='uniform',activation='relu',input_dim=9))
+classifier.add(Dense(units = 6, kernel_initializer = 'uniform', activation = 'relu'))
+classifier.add(Dense(units = 1, kernel_initializer = 'uniform', activation = 'sigmoid'))
+classifier.compile(optimizer = 'adam', loss = 'binary_crossentropy', metrics = ['accuracy'])
+classifier.fit(X_train, y_train, batch_size = 10, epochs = 100)
+y_pred = classifier.predict(X_test)
+y_pred = (y_pred > 0.5)
+y_pred
+from sklearn.metrics import confusion_matrix
+cm = confusion_matrix(y_test, y_pred)
+cm
